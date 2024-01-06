@@ -1,12 +1,12 @@
 "use client"
 
-import { CardWrapper } from "@/components/auth/card-wrapper"
-
+import { useTransition } from "react"
 import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { LoginSchema } from "@/schemas"
+import { CardWrapper } from "@/components/auth/card-wrapper"
 import { Input } from "@/components/ui/input"
 import {
   Form,
@@ -19,8 +19,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { FormError } from "@/components/fom-error"
 import { FormSuccess } from "@/components/fom-success"
+import { login } from "@/actions/login"
 
 export const LoginForm = () => {
+ 
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -29,8 +32,10 @@ export const LoginForm = () => {
     },
   })
 
-  const onSubmit = (data : z.infer<typeof LoginSchema>) => {
-    console.log(data)
+  // Submit handler for the form
+  const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
+    await login(data)
+    form.reset()
   }
   return (
     <CardWrapper
@@ -81,10 +86,15 @@ export const LoginForm = () => {
               )}
             />
           </div>
-           <FormError message=""/>     
-           <FormSuccess message=""/>     
-          <Button type="submit"
-          className="w-full">Login</Button>
+          <FormError message="" />
+          <FormSuccess message="" />
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={form.formState.isSubmitting}
+          >
+            Login
+          </Button>
         </form>
       </Form>
     </CardWrapper>
