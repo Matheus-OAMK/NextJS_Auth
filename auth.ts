@@ -7,14 +7,25 @@ import { UserRole } from "@prisma/client"
 
 import { getUserById } from "@/data/user"
 
-
-
 export const {
   handlers: { GET, POST },
   auth,
   signIn,
   signOut,
 } = NextAuth({
+  pages: {
+    signIn: "/auth/signin",
+    error: "/auth/error",
+  },
+  events: {
+    async linkAccount({ user }) {
+      // Update user to have emailVerified when using a provider
+      await db.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      })
+    },
+  },
   callbacks: {
     async session({ session, token, user }) {
       if (session.user && token.sub) {

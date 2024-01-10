@@ -1,8 +1,9 @@
 "use client"
 
 import { useTransition, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import * as z from "zod"
-import { set, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { LoginSchema } from "@/schemas"
@@ -22,6 +23,17 @@ import { FormSuccess } from "@/components/fom-success"
 import { login } from "@/actions/login"
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams()
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email is already in use by a different provider!"
+      : ""
+
+  const [isPending, startTransition] = useTransition()
+
+  const [error, setError] = useState<string | undefined>("")
+  const [success, setSuccess] = useState<string | undefined>("")
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -29,11 +41,6 @@ export const LoginForm = () => {
       password: "",
     },
   })
-
-  const [isPending, startTransition] = useTransition()
-
-  const [error, setError] = useState<string | undefined>("")
-  const [success, setSuccess] = useState<string | undefined>("")
 
   // Submit handler for the form
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
@@ -44,8 +51,8 @@ export const LoginForm = () => {
         setSuccess("")
 
         login(data).then(res => {
-          setSuccess(res.success)
-          setError(res.error)
+          setSuccess(res?.success)
+          setError(res?.error)
         })
       } catch (error) {
         console.log(error)
@@ -104,7 +111,7 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError message={error || urlError} />
           <FormSuccess message={success} />
 
           <Button
