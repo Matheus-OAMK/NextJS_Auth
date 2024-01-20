@@ -9,13 +9,13 @@ export const generateVerificationToken = async (email: string) => {
 
   // Delete existing token if it exists
   if (existingToken) {
-    await db.verifcationToken.delete({
+    await db.verificationToken.delete({
       where: { id: existingToken.id },
     })
   }
 
   // Create new token in db and return it
-  const verificationToken = await db.verifcationToken.create({
+  const verificationToken = await db.verificationToken.create({
     data: {
       email,
       token,

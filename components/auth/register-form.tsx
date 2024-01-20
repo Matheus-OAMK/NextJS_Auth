@@ -2,7 +2,7 @@
 
 import { useTransition, useState } from "react"
 import * as z from "zod"
-import { set, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { RegisterSchema } from "@/schemas"
@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
-import { FormError } from "@/components/fom-error"
-import { FormSuccess } from "@/components/fom-success"
+import { FormError } from "@/components/form-error"
+import { FormSuccess } from "@/components/form-success"
 import { register } from "@/actions/register"
 
 export const RegisterForm = () => {

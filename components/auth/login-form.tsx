@@ -18,8 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button"
-import { FormError } from "@/components/fom-error"
-import { FormSuccess } from "@/components/fom-success"
+import { FormError } from "@/components/form-error"
+import { FormSuccess } from "@/components/form-success"
 import { login } from "@/actions/login"
 
 export const LoginForm = () => {
