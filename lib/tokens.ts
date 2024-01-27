@@ -13,13 +13,13 @@ export const generatePasswordResetToken = async ( email: string) => {
 
   // Delete existing token if it exists
   if (existingToken) {
-    await db.verificationToken.delete({
+    await db.passwordResetToken.delete({
       where: { id: existingToken.id },
     })
   }
 
   // Create new token in db and return it
-  const passwordResetToken = await db.verificationToken.create({
+  const passwordResetToken = await db.passwordResetToken.create({
     data: {
       email,
       token,
