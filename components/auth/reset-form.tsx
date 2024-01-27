@@ -19,12 +19,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { FormError } from "@/components/form-error"
 import { FormSuccess } from "@/components/form-success"
-import { login } from "@/actions/login"
+import { reset } from "@/actions/reset"
 
 export const ResetForm = () => {
-
-
-
   const [isPending, startTransition] = useTransition()
 
   const [error, setError] = useState<string | undefined>("")
@@ -39,20 +36,20 @@ export const ResetForm = () => {
 
   // Submit handler for the form
   const onSubmit = async (data: z.infer<typeof ResetSchema>) => {
-    // startTransition(() => {
-    //   try {
-    //     // Reset error / success messages
-    //     setError("")
-    //     setSuccess("")
+    startTransition(() => {
+      try {
+        // Reset error / success messages
+        setError("")
+        setSuccess("")
 
-    //     login(data).then(res => {
-    //       setSuccess(res?.success)
-    //       setError(res?.error)
-    //     })
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // })
+        reset(data).then(res => {
+          setSuccess(res?.success)
+          setError(res?.error)
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    })
     console.log(data)
   }
 
@@ -86,8 +83,6 @@ export const ResetForm = () => {
                 </FormItem>
               )}
             />
-
-       
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
