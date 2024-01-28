@@ -1,11 +1,11 @@
 import NextAuth from "next-auth"
-
-import authConfig from "@/auth.config"
-import { db } from "@/lib/db"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { UserRole } from "@prisma/client"
 
+import { db } from "@/lib/db"
+import authConfig from "@/auth.config"
 import { getUserById } from "@/data/user"
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation"
 
 export const {
   handlers: { GET, POST },
@@ -27,9 +27,9 @@ export const {
     },
   },
   callbacks: {
-    async signIn({user, account}) {
+    async signIn({ user, account }) {
       // Allow OAuth without email verification
-      if ( account?.provider === "credentials") {
+      if (account?.provider === "credentials") {
         return true
       }
 
@@ -39,12 +39,27 @@ export const {
         return false
       }
 
-      //Todo add 2FA check
+      // 2FA check
+
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id
+        )
+
+        if (!twoFactorConfirmation) {
+          return false
+        }
+
+        // Remove 2FA after signin
+        await db.twoFactorConfirmation.delete({
+          where: { id: twoFactorConfirmation.id },
+        })
+      }
 
       return true
     },
 
-    async session({ session, token, user }) {
+    async session({ session, token}) {
       if (session.user && token.sub) {
         session.user.id = token.sub
       }
