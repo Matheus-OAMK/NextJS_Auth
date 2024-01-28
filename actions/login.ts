@@ -1,6 +1,7 @@
 "use server"
 import * as z from "zod"
 import { AuthError } from "next-auth"
+import bcrypt from "bcryptjs"
 
 import { db } from "@/lib/db"
 import { signIn } from "@/auth"
@@ -13,6 +14,7 @@ import { getTwoFactorTokenByEmail } from "@/data/two-factor-token"
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation"
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
+  // Validate fields
   const validatedFields = LoginSchema.safeParse(values)
 
   if (!validatedFields.success) {
@@ -21,10 +23,18 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   const { email, password, code } = validatedFields.data
 
+  // Check if user exists
   const existingUser = await getUserByEmail(email)
 
   if (!existingUser || !existingUser.password || !existingUser.email) {
     return { error: "Email does not exist!" }
+  }
+
+  // Validate password
+  const passwordIsValid = await bcrypt.compare(password, existingUser.password)
+
+  if (!passwordIsValid) {
+    return { error: "Invalid credentials!" }
   }
 
   // If the user exists but has not verified their email
@@ -91,6 +101,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     }
   }
 
+  // Finally attempt signIn
   try {
     await signIn("credentials", {
       email,
