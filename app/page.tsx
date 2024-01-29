@@ -13,21 +13,21 @@ export default async function Home() {
   return (
     <main
       className="flex h-full flex-col items-center justify-center 
-      bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary to-primary/95"
+      bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-background to-background/90"
     >
       <div className="space-y-6 text-center">
         <h1
           className={cn(
-            "text-6xl font-semibold text-white drop-shadow-md",
+            "text-6xl font-semibold drop-shadow-md",
             font.className
           )}
         >
           Auth
         </h1>
-        <p className="text-white text-lg">A simple authentication service</p>
+        <p className="text-lg">A simple authentication service</p>
         <LoginButton>
           <Button
-            variant="secondary"
+           
             size="lg"
           >
             {" "}
