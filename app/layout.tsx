@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react"
 import { auth } from "@/auth"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -33,6 +34,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             {children}{" "}
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
