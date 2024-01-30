@@ -30,12 +30,13 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       // Allow OAuth without email verification
-      if (account?.provider === "credentials") {
+      if (account?.provider !== "credentials") {
         return true
       }
 
       const existingUser = await getUserById(user.id)
 
+      // Prevent login without email verified
       if (!existingUser?.emailVerified) {
         return false
       }
@@ -60,6 +61,8 @@ export const {
       return true
     },
 
+    
+
     async session({ session, token }) {
       // Update session with token values
       if (session.user && token.sub) {
@@ -68,7 +71,7 @@ export const {
         session.user.email = token.email
         session.user.name = token.name
         session.user.role = token.role as UserRole // Couldnt extend JWT types
-        session.user.isOAuth = token.isOauth as boolean
+        session.user.isOAuth = token.isOAuth as boolean
       }
 
       return session
