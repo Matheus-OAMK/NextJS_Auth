@@ -6,6 +6,7 @@ import { db } from "@/lib/db"
 import authConfig from "@/auth.config"
 import { getUserById } from "@/data/user"
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation"
+import { getAccountByUserId } from "@/data/account"
 
 export const {
   handlers: { GET, POST },
@@ -59,32 +60,36 @@ export const {
       return true
     },
 
-    async session({ session, token}) {
+    async session({ session, token }) {
+      // Update session with token values
       if (session.user && token.sub) {
         session.user.id = token.sub
-      }
-
-      if (session.user && token.role) {
-        session.user.role = token.role as UserRole // Couldnt extend JWT types
-      }
-
-      if (session.user) {
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean // Couldnt extend JWT types
+        session.user.email = token.email
+        session.user.name = token.name
+        session.user.role = token.role as UserRole // Couldnt extend JWT types
+        session.user.isOAuth = token.isOauth as boolean
       }
+
       return session
     },
 
     async jwt({ token }) {
       if (!token.sub) return token
 
-      const isExistingUser = await getUserById(token.sub)
+      const existingUser = await getUserById(token.sub)
 
-      if (!isExistingUser) {
+      if (!existingUser) {
         return token
       }
 
-      token.role = isExistingUser.role
-      token.isTwoFactorEnabled = isExistingUser.isTwoFactorEnabled
+      const existingAccount = await getAccountByUserId(existingUser.id)
+      //Extend the JWT , needed to extend Session
+      token.email = existingUser.email
+      token.name = existingUser.name
+      token.role = existingUser.role
+      token.isOAuth = !!existingAccount
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled
       return token
     },
   },

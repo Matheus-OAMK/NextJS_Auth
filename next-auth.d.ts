@@ -7,6 +7,7 @@ declare module "next-auth" {
     user: DefaultSession["user"] & {
       role: UserRole
       isTwoFactorEnabled: boolean
+      isOAuth: boolean
     }
   }
 }
