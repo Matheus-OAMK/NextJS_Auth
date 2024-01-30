@@ -67,6 +67,10 @@ export const {
       if (session.user && token.role) {
         session.user.role = token.role as UserRole // Couldnt extend JWT types
       }
+
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean // Couldnt extend JWT types
+      }
       return session
     },
 
@@ -80,6 +84,7 @@ export const {
       }
 
       token.role = isExistingUser.role
+      token.isTwoFactorEnabled = isExistingUser.isTwoFactorEnabled
       return token
     },
   },
