@@ -49,7 +49,7 @@ const SettingsPage = () => {
       password: undefined,
       newPassword: undefined,
       role: user?.role || undefined,
-      isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined
+      isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
     },
   })
 
@@ -188,27 +188,29 @@ const SettingsPage = () => {
                 )}
               ></FormField>
 
-              <FormField
-                control={form.control}
-                name="isTwoFactorEnabled"
-                render={({ field }) => (
-                  <FormItem className="flex items-center justify-between border rounded-lg p-3 shadow-sm">
-                    <div>
-                      <FormLabel>Enable 2FA</FormLabel>
-                      <FormDescription>
-                        Enable two factor authentication for your account
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        disabled={isPending}
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              ></FormField>
+              {!user?.isOAuth && (
+                <FormField
+                  control={form.control}
+                  name="isTwoFactorEnabled"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-between border rounded-lg p-3 shadow-sm">
+                      <div>
+                        <FormLabel>Enable 2FA</FormLabel>
+                        <FormDescription>
+                          Enable two factor authentication for your account
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          disabled={isPending}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                ></FormField>
+              )}
             </div>
             <FormError message={error} />
             <FormSuccess message={success} />
