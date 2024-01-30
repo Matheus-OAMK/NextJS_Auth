@@ -11,7 +11,7 @@ type LoginButtonProps = {
 export const LoginButton = ({
   children,
   mode = "redirect",
-  asChild,
+  asChild
 }: LoginButtonProps) => {
 
   const router = useRouter()
@@ -26,5 +26,5 @@ export const LoginButton = ({
     )
   }
 
-  return <span onClick={onClick} className="cursor-pointer">{children}</span>
+  return <span onClick={onClick} >{children}</span>
 }

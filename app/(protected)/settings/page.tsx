@@ -11,7 +11,7 @@ const SettingsPage = () => {
   }
 
   return (
-    <div>
+    <div className="p-10 rounded-xl">
 
       <button onClick={onClick}>Sign out</button>
     </div>
