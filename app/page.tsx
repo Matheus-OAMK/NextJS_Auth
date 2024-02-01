@@ -24,7 +24,7 @@ export default async function Home() {
         >
           Auth
         </h1>
-        <p className="text-lg">A simple authentication service</p>
+        <p className="text-lg pb-6">A simple authentication service</p>
         <LoginButton>
           <Button
            
