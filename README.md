@@ -59,7 +59,7 @@ This project is an authentication app implemented with [AuthJS-V5](https://authj
  npm install
 ```
 
-3. Setup .env file using your own variables
+3. Setup .env file using your own variables (Read instructions on .env.example)
 
 ```js
 DATABASE_URL=
@@ -74,6 +74,7 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 
 RESEND_API_KEY=
+RESEND_EMAIL_DOMAIN=
 
 NEXT_PUBLIC_APP_URL=
 ```
