@@ -1,5 +1,5 @@
 "use client"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, CSSProperties } from "react"
 import { useSearchParams } from "next/navigation"
 import { BeatLoader } from "react-spinners"
 import { CardWrapper } from "@/components/auth/card-wrapper"
@@ -13,20 +13,28 @@ export const NewVerificationForm = () => {
   const searchParams = useSearchParams()
   const token = searchParams.get("token")
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
+    setError("")
+    setSuccess("")
+
     if (!token) {
       setError("Missing token!")
       return
     }
 
-    newVerification(token)
-      .then(data => {
-        setSuccess(data.success)
-        setError(data.error)
-      })
-      .catch(() => {
-        setError("Something went wrong!")
-      })
+    try {
+      const { error, success } = await newVerification(token)
+
+      if (error) {
+        setError(error)
+      }
+
+      if (success) {
+        setSuccess(success)
+      }
+    } catch (error) {
+      setError("Something went wrong!")
+    }
   }, [token])
 
   useEffect(() => {
@@ -39,7 +47,7 @@ export const NewVerificationForm = () => {
       backButtonHref="/auth/login"
     >
       <div className="flex items-center w-full justify-center">
-        {!success && !error && <BeatLoader />}
+        {!success && !error && <BeatLoader color="#7C3AED" />}
 
         <FormSuccess message={success} />
         <FormError message={error} />
